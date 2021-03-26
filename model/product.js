@@ -1,7 +1,9 @@
 const fs = require('fs')
 const path = require('path')
+
 const rootDir = require('../util/helper')
 const p = path.join(rootDir, 'data', 'product.JSON')
+const Cart = require('./cart')
 
 const getProductsFromFile = cb => {
     fs.readFile(p, (err, fileContent) => {
@@ -35,7 +37,9 @@ module.exports = class Product {
             this.id = Math.random().toString()
             products.push(this);
             fs.writeFile(p, JSON.stringify(products), err => {
-              console.log(err);
+              if(err){
+                console.log(err);
+              } 
             });
           }
          
@@ -44,11 +48,14 @@ module.exports = class Product {
 
       static deleteProduct(id){
        getProductsFromFile(products => {
+         const product = products.find(prod => prod.id === id)
          const updatedProduct = products.filter(prod => prod.id !== id)
-         console.log(updatedProduct)
-          fs.writeFile(p,JSON.stringify(updatedProduct),err=>{
+          fs.writeFile(p,JSON.stringify(updatedProduct), err=>{
             if(!err){
-              console.log('Success')
+              Cart.deleteProductFromCart(id, product.price)
+            }
+            else{
+              console.log(err)
             }
           })
        })
