@@ -5,7 +5,7 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
     edit: false
-});
+  });
 }
 
 exports.postAddProduct = (req, res, next) => {
@@ -34,6 +34,8 @@ exports.getEditProduct = (req , res, next) => {
     })
   })
 }
+
+
 exports.postEditProduct = (req,res,next) =>{
   const updatedId = req.body.productId
   const updatedTitle = req.body.title;
@@ -42,7 +44,12 @@ exports.postEditProduct = (req,res,next) =>{
   const updatedDescription = req.body.description;
   const updatedProduct = new Product(updatedId ,updatedTitle, updatedImageUrl, updatedDescription, updatedPrice);
   updatedProduct.save();
+  res.redirect('/')
+}
 
+exports.deleteProduct = (req,res,next) =>{
+  const productId = req.body.productId
+  Product.deleteProduct(productId);
   res.redirect('/')
 }
 
