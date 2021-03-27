@@ -12,13 +12,13 @@ exports.getProducts = (req, res, next) => {
 };
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId
- Product.fetchById(prodId , product => {
-   res.render('shop/product-detail',{
-     product: product,
-     pageTitle: 'Product',
-     path: '/products'
-   })
- })
+  Product.fetchById(prodId, product => {
+    res.render('shop/product-detail', {
+      product: product,
+      pageTitle: 'Product',
+      path: '/products'
+    })
+  })
 }
 
 exports.getIndex = (req, res, next) => {
@@ -33,33 +33,47 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
   Cart.getCart(cart => {
-    Product.fetchAll(products =>{
+    Product.fetchAll(products => {
       const cartProducts = []
-      for(product of products){
+      for (product of products) {
         const cartProductData = cart.products.find(prod => prod.id === product.id)
-        if(cartProductData){
-          cartProducts.push({productData: product , productQty: cartProductData.qty})
+        if (cartProductData) {
+          cartProducts.push({ productData: product, productQty: cartProductData.qty })
         }
       }
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
         products: cartProducts
+      })
     })
-  }) 
   });
 };
 
-exports.postCart = (req , res ,next) =>{
+exports.postCart = (req, res, next) => {
+  const products = []
   const productId = req.body.productId
-  Product.fetchById(productId, (product)=> {
-      Cart.addProduct(productId, product.price)
+  Product.fetchById(productId, (product) => {
+    Cart.addProduct(productId, product.price)
   })
-  res.render('shop/cart',{
+  res.render('shop/cart', {
     path: '/cart',
     pageTitle: 'Your Cart'
   })
 }
+
+exports.deleteItemFromCart = (req, res, next) => {
+  const productId = req.body.productId
+  const products = []
+  Product.fetchById(productId, product => {
+    Cart.deleteProductFromCart(productId, product.price)
+    res.render('shop/cart', {
+      path: '/cart',
+      pageTitle: 'Your Cart'
+    })
+  })
+}
+
 
 exports.getOrders = (req, res, next) => {
   res.render('shop/orders', {
