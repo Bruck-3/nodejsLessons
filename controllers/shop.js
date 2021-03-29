@@ -51,7 +51,6 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.postCart = (req, res, next) => {
-  const products = []
   const productId = req.body.productId
   Product.fetchById(productId, (product) => {
     Cart.addProduct(productId, product.price)
@@ -64,7 +63,6 @@ exports.postCart = (req, res, next) => {
 
 exports.deleteItemFromCart = (req, res, next) => {
   const productId = req.body.productId
-  const products = []
   Product.fetchById(productId, product => {
     Cart.deleteProductFromCart(productId, product.price)
     res.render('shop/cart', {
