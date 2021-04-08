@@ -1,5 +1,6 @@
 const Product = require("../model/product");
 
+
 exports.getAddProduct = (req, res) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
@@ -7,6 +8,17 @@ exports.getAddProduct = (req, res) => {
     edit: false,
   });
 };
+
+exports.getProducts = (req, res) => {
+  Product.fetchAll().then(products =>{
+    res.render('admin/products', {
+      prods: products,
+      pageTitle: 'Admin Products',
+      path: '/admin/products'
+  })
+  })
+}
+
 
 exports.postAddProduct = (req, res) => {
   const title = req.body.title;
@@ -80,12 +92,3 @@ exports.postAddProduct = (req, res) => {
 //     .catch(err => console.log(err))
 // }
 
-// exports.getProducts = (req, res) => {
-//   Product.findAll().then(products => {
-//     res.render('admin/products', {
-//       prods: products,
-//       pageTitle: 'Admin Products',
-//       path: '/admin/products'
-//     });
-//   }).catch(err => console.log(err))
-// }
