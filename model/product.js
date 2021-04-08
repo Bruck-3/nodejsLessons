@@ -1,32 +1,22 @@
-const fs = require('fs')
-const path = require('path')
+const getDb = require('../util/database').getDatabase
 
-const rootDir = require('../util/helper')
-const p = path.join(rootDir, 'data', 'product.JSON')
-const Cart = require('./cart')
-const sql = require('../util/database')
-
-module.exports = class Product {
-  constructor(id, title, imageUrl, description, price) {
-    this.id = id
-    this.title = title;
-    this.imageUrl = imageUrl;
-    this.description = description;
-    this.price = price;
+const Product = class {
+  constructor(title,imageUrl,price,description){
+    this.title = title
+    this.price = price
+    this.imageUrl = imageUrl
+    this.description = description
   }
-  save() {
-
-  }
-
-  static deleteProduct(id) {
-
-  }
-
-  static fetchAll() {
-    return sql.execute("SELECT * FROM products")
-
-  }
-
-  static fetchById(id) {
+  save(){
+    const db = getDb()
+    return  db.collection('products').insertOne(this).then(result => {
+      console.log(result)
+    }).catch(
+      err => {
+        throw err
+      }
+    )
   }
 }
+
+module.exports = Product
